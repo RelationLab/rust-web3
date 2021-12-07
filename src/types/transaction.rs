@@ -4,69 +4,101 @@ use serde::{Deserialize, Serialize};
 /// Description of a Transaction, pending or in the chain.
 #[derive(Debug, Default, Clone, PartialEq, Deserialize, Serialize)]
 pub struct Transaction {
-    /// Hash
-    pub hash: H256,
-    /// Nonce
-    pub nonce: U256,
     /// Block hash. None when pending.
     #[serde(rename = "blockHash")]
     pub block_hash: Option<H256>,
     /// Block number. None when pending.
     #[serde(rename = "blockNumber")]
     pub block_number: Option<U64>,
-    /// Transaction Index. None when pending.
-    #[serde(rename = "transactionIndex")]
-    pub transaction_index: Option<Index>,
     /// Sender
     pub from: H160,
-    /// Recipient (None when contract creation)
-    pub to: Option<H160>,
-    /// Transfered value
-    pub value: U256,
+    /// Gas amount
+    pub gas: U256,
     /// Gas Price
     #[serde(rename = "gasPrice")]
     pub gas_price: U256,
-    /// Gas amount
-    pub gas: U256,
+
+    /// Gas maxFeePerGas
+    #[serde(rename = "maxFeePerGas")]
+    pub max_fee_per_gas: Option<U256>,
+    /// Gas maxPriorityFeePerGas
+    #[serde(rename = "maxPriorityFeePerGas")]
+    pub max_priority_fee_per_gas: Option<U256>,
+    /// Hash
+    #[serde(rename = "hash")]
+    pub hash: H256,
     /// Input data
+    #[serde(rename = "input")]
     pub input: Bytes,
+
+    /// Nonce
+    pub nonce: U256,
+
+    /// Recipient (None when contract creation)
+    #[serde(rename = "to")]
+    pub to: Option<H160>,
+    /// Transaction Index. None when pending.
+    #[serde(rename = "transactionIndex")]
+    pub transaction_index: Option<Index>,
+
+    /// Transfered value
+    #[serde(rename = "value")]
+    pub value: U256,
+
+    /// Transfered type
+    #[serde(rename = "type")]
+    pub trx_type: U256,
+    /// chain id
+    #[serde(rename = "chainId")]
+    pub chain_id: Option<U64>,
 }
 
 /// "Receipt" of an executed transaction: details of its execution.
 #[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Receipt {
-    /// Transaction hash.
-    #[serde(rename = "transactionHash")]
-    pub transaction_hash: H256,
-    /// Index within the block.
-    #[serde(rename = "transactionIndex")]
-    pub transaction_index: Index,
     /// Hash of the block this transaction was included within.
     #[serde(rename = "blockHash")]
     pub block_hash: Option<H256>,
     /// Number of the block this transaction was included within.
     #[serde(rename = "blockNumber")]
     pub block_number: Option<U64>,
-    /// Cumulative gas used within the block after this was executed.
-    #[serde(rename = "cumulativeGasUsed")]
-    pub cumulative_gas_used: U256,
-    /// Gas used by this transaction alone.
-    ///
-    /// Gas used is `None` if the the client is running in light client mode.
-    #[serde(rename = "gasUsed")]
-    pub gas_used: Option<U256>,
     /// Contract address created, or `None` if not a deployment.
     #[serde(rename = "contractAddress")]
     pub contract_address: Option<H160>,
+    /// Cumulative gas used within the block after this was executed.
+    #[serde(rename = "cumulativeGasUsed")]
+    pub cumulative_gas_used: U256,
+    /// effectiveGasPrice
+    #[serde(rename = "effectiveGasPrice")]
+    pub effective_gas_used: U256,
+    /// from
+    #[serde(rename = "from")]
+    pub from: Option<H160>,
+    /// Gas used by this transaction alone.
+    /// Gas used is `None` if the the client is running in light client mode.
+    #[serde(rename = "gasUsed")]
+    pub gas_used: Option<U256>,
     /// Logs generated within this transaction.
     pub logs: Vec<Log>,
-    /// Status: either 1 (success) or 0 (failure).
-    pub status: Option<U64>,
-    /// State root.
-    pub root: Option<H256>,
     /// Logs bloom
     #[serde(rename = "logsBloom")]
     pub logs_bloom: H2048,
+    /// Status: either 1 (success) or 0 (failure).
+    pub status: Option<U64>,
+    /// to
+    pub to: Option<H160>,
+    /// Transaction hash.
+    #[serde(rename = "transactionHash")]
+    pub transaction_hash: H256,
+    /// Index within the block.
+    #[serde(rename = "transactionIndex")]
+    pub transaction_index: Index,
+    /// type
+    #[serde(rename = "type")]
+    pub logs_type: Option<U64>,
+    /// State root.
+    // todo be used at codec.rs:265
+    pub root: Option<H256>,
 }
 
 /// Raw bytes of a signed, but not yet sent transaction
